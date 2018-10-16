@@ -298,6 +298,8 @@
 		F8CE22551C33C72C00ECFBF0 /* LICENSE.TXT in Resources */ = {isa = PBXBuildFile; fileRef = F8CE22541C33C72C00ECFBF0 /* LICENSE.TXT */; };
 		FAE4566C2175883800C14E62 /* AppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE4566B2175883800C14E62 /* AppInfo.m */; };
 		FAE4566E2175884C00C14E62 /* AppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE4566D2175884C00C14E62 /* AppInfo.h */; };
+		FAE456712175E93C00C14E62 /* LagMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE456702175E93C00C14E62 /* LagMonitor.h */; };
+		FAE456732175E95500C14E62 /* LagMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE456722175E95500C14E62 /* LagMonitor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -615,6 +617,8 @@
 		F8CE22541C33C72C00ECFBF0 /* LICENSE.TXT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.TXT; sourceTree = "<group>"; };
 		FAE4566B2175883800C14E62 /* AppInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppInfo.m; sourceTree = "<group>"; };
 		FAE4566D2175884C00C14E62 /* AppInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppInfo.h; sourceTree = "<group>"; };
+		FAE456702175E93C00C14E62 /* LagMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LagMonitor.h; sourceTree = "<group>"; };
+		FAE456722175E95500C14E62 /* LagMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LagMonitor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -986,6 +990,7 @@
 		91A9F17F183870B3004B911E /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				FAE4566F2175E87100C14E62 /* Lag */,
 				FAE4566A2175880D00C14E62 /* AppInfo */,
 				91A9F180183870B3004B911E /* Battery */,
 				91A9F18E183870B4004B911E /* Common */,
@@ -1495,6 +1500,15 @@
 			path = AppInfo;
 			sourceTree = "<group>";
 		};
+		FAE4566F2175E87100C14E62 /* Lag */ = {
+			isa = PBXGroup;
+			children = (
+				FAE456702175E93C00C14E62 /* LagMonitor.h */,
+				FAE456722175E95500C14E62 /* LagMonitor.m */,
+			);
+			path = Lag;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1533,6 +1547,7 @@
 				91111738185567C4007D0AC0 /* GTInputDataInfo.h in Headers */,
 				91C97F1A1839FDBA0059BBE6 /* GTSandboxPlugin.h in Headers */,
 				91A9F25D183870B4004B911E /* GTCoreApiForOC.h in Headers */,
+				FAE456712175E93C00C14E62 /* LagMonitor.h in Headers */,
 				91A9F266183870B4004B911E /* GTParaOutApi.h in Headers */,
 				91A9F269183870B4004B911E /* GTPluginApiForOC.h in Headers */,
 				91A83714183C654400F8A779 /* GTParaOutputCell.h in Headers */,
@@ -1856,6 +1871,7 @@
 				91A9F2D7183870B5004B911E /* GTParaBoard.m in Sources */,
 				91A9F2EE183870B5004B911E /* GTPluginViewController.m in Sources */,
 				91A9F2F3183870B5004B911E /* GTProfilerBoard.m in Sources */,
+				FAE456732175E95500C14E62 /* LagMonitor.m in Sources */,
 				91A9F3FA18387E6A004B911E /* GTPopoverController.m in Sources */,
 				91A9F309183870B5004B911E /* GTParaSettingBoard.m in Sources */,
 				91A9F2E6183870B5004B911E /* GTInputObject.m in Sources */,

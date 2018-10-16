@@ -30,11 +30,11 @@
 #ifndef GT_DEBUG_DISABLE
 
 //当前GT的版本号
-#define M_GT_VERSION @"2.2.3"
+#define M_GT_VERSION @"3.0.0"
 
 //GT版本显示
-#define M_GT_RELEASE_ABOUT_TXT @"GT v2.2.3(iPhone)"
-#define M_GT_DELEVOP_ABOUT_TXT @"GT 2.2.3(iPhone)\rDEV Version"
+#define M_GT_RELEASE_ABOUT_TXT @"GT v3.0.0(iPhone)"
+#define M_GT_DELEVOP_ABOUT_TXT @"GT 3.0.0(iPhone)\rDEV Version"
 #define M_GT_ABOUT_TXT M_GT_RELEASE_ABOUT_TXT
 
 #endif

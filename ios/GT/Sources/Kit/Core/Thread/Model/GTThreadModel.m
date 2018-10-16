@@ -98,6 +98,7 @@ M_GT_DEF_SINGLETION(GTThreadModel);
         
         basic_info_th = (thread_basic_info_t)thinfo;
 
+        // 如果为非空闲线程
         if (!(basic_info_th->flags & TH_FLAGS_IDLE))
         {
             cpu_usage += basic_info_th->cpu_usage;

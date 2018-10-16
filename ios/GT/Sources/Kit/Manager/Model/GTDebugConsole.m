@@ -43,6 +43,7 @@
 #import "GTVersionDef.h"
 #import "GTMTA.h"
 #import "GTMTAConfig.h"
+#import "LagMonitor.h"
 
 @implementation GTDebugConsole
 
@@ -83,6 +84,7 @@ M_GT_DEF_SINGLETION(GTDebugConsole);
     [GTNetModel sharedInstance];
     [GTMemoryModel sharedInstance];
     [GTBattery sharedInstance];
+    [[LagMonitor sharedInstance] startMonitor];
     
     
     // 日志初始化
