@@ -296,6 +296,8 @@
 		F87417561B86CF7F00CEBBA0 /* GTImage.m in Sources */ = {isa = PBXBuildFile; fileRef = F87417541B86CF7F00CEBBA0 /* GTImage.m */; };
 		F874175C1B86CFB700CEBBA0 /* GTVersionDef.h in Headers */ = {isa = PBXBuildFile; fileRef = F87417591B86CFB700CEBBA0 /* GTVersionDef.h */; };
 		F8CE22551C33C72C00ECFBF0 /* LICENSE.TXT in Resources */ = {isa = PBXBuildFile; fileRef = F8CE22541C33C72C00ECFBF0 /* LICENSE.TXT */; };
+		FAE4566C2175883800C14E62 /* AppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE4566B2175883800C14E62 /* AppInfo.m */; };
+		FAE4566E2175884C00C14E62 /* AppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE4566D2175884C00C14E62 /* AppInfo.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -611,6 +613,8 @@
 		F87417541B86CF7F00CEBBA0 /* GTImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTImage.m; sourceTree = "<group>"; };
 		F87417591B86CFB700CEBBA0 /* GTVersionDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTVersionDef.h; sourceTree = "<group>"; };
 		F8CE22541C33C72C00ECFBF0 /* LICENSE.TXT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.TXT; sourceTree = "<group>"; };
+		FAE4566B2175883800C14E62 /* AppInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppInfo.m; sourceTree = "<group>"; };
+		FAE4566D2175884C00C14E62 /* AppInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppInfo.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -982,6 +986,7 @@
 		91A9F17F183870B3004B911E /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				FAE4566A2175880D00C14E62 /* AppInfo */,
 				91A9F180183870B3004B911E /* Battery */,
 				91A9F18E183870B4004B911E /* Common */,
 				91A9F198183870B4004B911E /* Memory */,
@@ -1481,6 +1486,15 @@
 			path = Sandbox;
 			sourceTree = "<group>";
 		};
+		FAE4566A2175880D00C14E62 /* AppInfo */ = {
+			isa = PBXGroup;
+			children = (
+				FAE4566B2175883800C14E62 /* AppInfo.m */,
+				FAE4566D2175884C00C14E62 /* AppInfo.h */,
+			);
+			path = AppInfo;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1580,6 +1594,7 @@
 				91A9F2D4183870B5004B911E /* GTUIManager.h in Headers */,
 				91A9F2D8183870B5004B911E /* GTParaConfig.h in Headers */,
 				91A9F2E3183870B5004B911E /* GTInputList.h in Headers */,
+				FAE4566E2175884C00C14E62 /* AppInfo.h in Headers */,
 				91A9F2BF183870B5004B911E /* GTLogSearchBoard.h in Headers */,
 				91A9F2D2183870B5004B911E /* GTLogoWindow.h in Headers */,
 				91A9F42E1838A545004B911E /* GTProfilerSummaryView.h in Headers */,
@@ -1662,6 +1677,12 @@
 			attributes = {
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = wstt;
+				TargetAttributes = {
+					91556DE7169FB62000492680 = {
+						DevelopmentTeam = 36WT396TPZ;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = 91797ECE169E6C7E00C944D8 /* Build configuration list for PBXProject "GTKit" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1792,6 +1813,7 @@
 				91A9F2E4183870B5004B911E /* GTInputList.m in Sources */,
 				91C97F1B1839FDBA0059BBE6 /* GTSandboxPlugin.m in Sources */,
 				91A9F3DE18387D62004B911E /* GTUtility.m in Sources */,
+				FAE4566C2175883800C14E62 /* AppInfo.m in Sources */,
 				91A9F27F183870B4004B911E /* GTPlotsView.m in Sources */,
 				91A9F42B1838A4A7004B911E /* GTProfilerHeaderView.m in Sources */,
 				91A9F307183870B5004B911E /* GTLogSettingBoard.m in Sources */,
@@ -1943,8 +1965,11 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 36WT396TPZ;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -1970,6 +1995,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s arm64 i386 x86_64";
 				WRAPPER_EXTENSION = framework;
@@ -1982,9 +2008,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 36WT396TPZ;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -2010,6 +2039,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s arm64 i386 x86_64";
 				WRAPPER_EXTENSION = framework;

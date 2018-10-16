@@ -33,6 +33,7 @@
 #import "GTProfilerValue.h"
 #import "GTLogConfig.h"
 #import "GTConfig.h"
+#import "AppInfo.h"
 
 @implementation NSString (FileSort)
 //按文件名的数字排序，最小到最大
@@ -438,11 +439,15 @@
         NSString *filePath = [[GTConfig sharedInstance] pathForDirByCreated:M_GT_PARA_OUT_DIR fileName:fileName ofType:M_GT_FILE_TYPE_CSV];
         
         [self exportCSV:filePath param:dic];
+        
+        // 保存JS文件
+        NSString *filePathJS = [[GTConfig sharedInstance] pathForDirByCreated:M_GT_PARA_OUT_DIR fileName:@"data" ofType:M_GT_FILE_TYPE_JS];
+        [self exportCSV:filePathJS param:dic];
     }
     
 }
 
-
+//创建文件
 - (void)createFile:(NSString *)filePath {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager removeItemAtPath:filePath error:nil];
@@ -451,6 +456,139 @@
         NSLog(@"Create file error!");
     }
 }
+
+// 获取第row行第col列的值
+- (NSString *)getValue:(NSDictionary *)dic atRow:(NSInteger)row atCol:(NSInteger)col {
+    NSArray *array = [dic objectForKey:@"history"];
+    GTHistroyValue *value = [array objectAtIndex:row];
+    NSArray *line = [[value rowStr] componentsSeparatedByString:@","];
+    return [line[col] stringByReplacingOccurrencesOfString:@"\r\n"withString:@""];
+}
+
+/**
+ *  字典转JSON字符串
+ *  @param dic 字典
+ *  @return JSON字符串
+ */
+- (NSString*)dictionaryToJson:(NSDictionary *)dic{
+    NSError *parseError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+}
+
+//保存JS文件格式
+- (void)exportJS:(NSString *)filePath param:(NSDictionary *)dicAll {
+    // 创建文件
+    [self createFile:filePath];
+    // 打开文件
+    NSOutputStream *output = [[NSOutputStream alloc] initToFileAtPath:filePath append:YES];
+    [output open];
+    // 判断是否有足够空间
+    if (![output hasSpaceAvailable]) {
+        NSLog(@"Not enough space");
+    } else {
+        
+        // 初始化数据
+        NSDictionary *cpuDic = [dicAll objectForKey:@"App CPU"];
+        NSDictionary *frameDic = [dicAll objectForKey:@"App Smoothness"];
+        NSDictionary *memDic = [dicAll objectForKey:@"App Memory"];
+        NSDictionary *flowDic = [dicAll objectForKey:@"Device Network"];
+        
+        // 组装appInfo
+        NSMutableDictionary *appInfo = [NSMutableDictionary dictionaryWithCapacity:M_GT_MB];
+        [appInfo setObject:[AppInfo getAPPVerion] forKey:@"getAPPVerion"];
+        [appInfo setObject:@"3.0" forKey:@"gtrVersionCode"];
+        [appInfo setObject:[AppInfo getAppName] forKey:@"appName"];
+        [appInfo setObject:@"" forKey:@"mainThreadId"];
+        [appInfo setObject:[AppInfo getAppName] forKey:@"packageName"];
+        [appInfo setObject:[AppInfo getBuildVerion] forKey:@"versionCode"];
+
+        NSMutableArray *normalInfos = [NSMutableArray arrayWithCapacity:10];
+        NSArray *array = [cpuDic objectForKey:@"history"];
+        NSMutableArray *cpuData = [NSMutableArray arrayWithCapacity:10];
+        NSMutableArray *memData = [NSMutableArray arrayWithCapacity:10];
+        float flowDownSum = 0;
+        float flowUploadSum = 0;
+        
+        for (int i = 0; i < [array count]; i++) {
+            NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:10];
+            NSString *cpuValue =[self getValue:cpuDic atRow:i atCol:4];
+            NSString *memValue = [self getValue:memDic atRow:i atCol:4];
+            NSString *flowDownValue = [self getValue:flowDic atRow:i atCol:4];
+            NSString *flowUploadValue = [self getValue:flowDic atRow:i atCol:5];
+            [dic setObject:cpuValue forKey:@"cpuApp"];
+            [dic setObject:flowDownValue forKey:@"flowDownload"];
+            [dic setObject:memValue forKey:@"memory"];
+            [dic setObject:flowUploadValue forKey:@"flowUpload"];
+            [dic setObject:[self getValue:flowDic atRow:i atCol:3] forKey:@"time"];
+            // 组装normalInfos
+            [normalInfos addObject:dic];
+            // 计算总上、下行流量
+            flowDownSum = flowDownSum + [flowDownValue floatValue];
+            flowUploadSum = flowUploadSum + [flowUploadValue floatValue];
+            
+            [cpuData addObject:cpuValue];
+            [memData addObject:memValue];
+        }
+        // 设置开始时间
+        [appInfo setObject:[normalInfos[0] objectForKey:@"time"] forKey:@"startTestTime"];
+        
+        // 组装frame
+        NSMutableArray *frames = [NSMutableArray arrayWithCapacity:10];
+        NSArray *frameArray = [frameDic objectForKey:@"history"];
+        for (int i = 0; i < [frameArray count]; i++) {
+            [frames addObject:[self getValue:cpuDic atRow:i atCol:4]];
+        }
+        
+        // 组装deviceInfo
+        NSMutableDictionary *deviceInfo = [NSMutableDictionary dictionaryWithCapacity:10];
+        [deviceInfo setObject:[AppInfo getSystemVersion] forKey:@"sdkInt"];
+        [deviceInfo setObject:@"3.0" forKey:@"gtrVersionCode"];
+        [deviceInfo setObject:[AppInfo getSystemName] forKey:@"sdkName"];
+        [deviceInfo setObject:[AppInfo getDeviceName] forKey:@"vendor"];
+        
+        // 组装frontBackStates，先不区分前后台
+        NSMutableArray *frontBackStates = [NSMutableArray arrayWithCapacity:10];
+        NSDictionary *beginDic = [NSDictionary dictionaryWithObjectsAndKeys:@"1",@"isFront",[normalInfos[0] objectForKey:@"time"],@"time", nil];
+        NSDictionary *endDic = [NSDictionary dictionaryWithObjectsAndKeys:@"0",@"isFront",[normalInfos[[normalInfos count]-1] objectForKey:@"time"],@"time", nil];
+        [frontBackStates addObject:beginDic];
+        [frontBackStates addObject:endDic];
+        
+        // 组装frontBackInfo
+        NSMutableDictionary *frontBackInfo = [NSMutableDictionary dictionaryWithCapacity:10];
+        [frontBackInfo setObject:cpuData forKey:@"frontCpuArray"];
+        [frontBackInfo setObject:[NSNumber numberWithFloat:flowDownSum] forKey:@"frontFlowDownload"];
+        [frontBackInfo setObject:[NSNumber numberWithFloat:flowUploadSum] forKey:@"frontFlowUpload"];
+        [frontBackInfo setObject:memData forKey:@"frontMemoryArray"];
+        
+        // 组装其他
+        NSString *other = @"var gtrThreadInfos=[];\r\nvar allBlockInfos=[];\r\nvar bigBlockIDs=[];\r\nvar pageLoadInfos=[];\r\nvar overActivityInfosvar=[];\r\nvar overViewDraws=[];\r\nvar operationInfos=[];\r\nvar viewBuildInfos=[];\r\nvar overViewBuilds=[];\r\nvar fragmentInfos=[];\r\nvar overFragments=[];\r\nvar allGCInfos=[];\r\nvar explicitGCs=[];\r\nvar diskIOInfos=[];\r\nvar fileActionInfos=[];\r\nvar fileActionInfosInMainThread=[];\r\nvar dbActionInfos=[];\r\nvar dbActionInfosInMainThread=[];\r\nvar logInfos=[];\r\nvar flagInfo=[];\r\nvar tableBaseData_base=frontBackInfo;\r\nvar tableBaseData_lowSM=lowSMInfos;\r\nvar tableBaseData_bigBlock=bigBlockIDs;\r\nvar tableBaseData_overActivity=overActivityInfos;\r\nvar tableBaseData_allPage=pageLoadInfos;\r\nvar tableBaseData_overFragment=overFragments;\r\nvar tableBaseData_allFragment=fragmentInfos;\r\nvar tableBaseData_overViewBuild=overViewBuilds;\r\nvar tableBaseData_overViewDraw=overViewDraws;\r\nvar tableBaseData_explicitGC=explicitGCs;\r\nvar tableBaseData_fileActionInMainThread=fileActionInfosInMainThread;\r\nvar tableBaseData_dbActionInMainThread=dbActionInfosInMainThread;\r\nvar tableBaseData_db=dbActionInfos;\r\nvar tableBaseData_logcat=logInfos;";
+        
+
+        // 组装全部数据
+        NSMutableString *body = [[NSMutableString alloc] initWithCapacity:M_GT_MB];
+        [body appendFormat:@"var appInfo=%@\r\n", [self dictionaryToJson:appInfo]];
+        [body appendFormat:@"var frames=%@\r\n", [frames componentsJoinedByString:@","]];
+        [body appendFormat:@"var normalInfos=%@\r\n", [normalInfos componentsJoinedByString:@","]];
+        [body appendFormat:@"var deviceInfo=%@\r\n", [self dictionaryToJson:deviceInfo]];
+        [body appendFormat:@"var frontBackStates=%@\r\n", [frontBackStates componentsJoinedByString:@","]];
+        [body appendFormat:@"var frontBackInfo=%@\r\n", [self dictionaryToJson:frontBackInfo]];
+        [body appendFormat:@"%@\r\n", other];
+        
+        
+        // 写入历史数据
+        const uint8_t *bodyString = (const uint8_t *)[body cStringUsingEncoding:NSUTF8StringEncoding];
+        NSInteger bodyLength = [body lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+        [body release];
+        NSInteger result = [output write:bodyString maxLength:bodyLength];
+        if (result <= 0) {
+            NSLog(@"write error.");
+        }
+        [output close];
+    }
+    [output release];
+}
+
 
 
 //保存CSV文件格式

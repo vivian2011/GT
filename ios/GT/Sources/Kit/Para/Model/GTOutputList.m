@@ -377,7 +377,7 @@ M_GT_DEF_SINGLETION(GTOutputList);
 //        if (needClear) {
 //            
 //        }
-        
+        //保存csv文件
         for (int i = 0; i < [[dicAll allKeys] count]; i++) {
             id key = [[dicAll allKeys] objectAtIndex:i];
             
@@ -389,6 +389,10 @@ M_GT_DEF_SINGLETION(GTOutputList);
             
             [obj exportCSV:filePath param:dic];
         }
+        // 保存js文件
+        GTOutputObject *obj = [self objectForKey:@"App CPU"];
+        NSString *filePath = [[GTConfig sharedInstance] pathForDirByCreated:dir fileName:@"data" ofType:M_GT_FILE_TYPE_JS];
+        [obj exportJS:filePath param:dicAll];
     }
     
 }

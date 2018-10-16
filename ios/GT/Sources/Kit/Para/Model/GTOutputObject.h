@@ -133,6 +133,7 @@
 - (NSMutableDictionary *)dictionaryForSave;
 - (void)exportCSV:(NSString *)filePath param:(NSDictionary *)dic;
 - (void)saveFile:(NSString *)fileName inThread:(BOOL)inThread;
+- (void)exportJS:(NSString *)filePath param:(NSDictionary *)dicAll;
 
 //保存到系统文件
 + (void)exportDisk:(NSDictionary *)dic;

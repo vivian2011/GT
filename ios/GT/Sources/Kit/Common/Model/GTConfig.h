@@ -54,6 +54,7 @@ typedef enum {
 #define M_GT_FILE_TYPE_LOG      @"log"
 #define M_GT_FILE_TYPE_CSV      @"csv"
 #define M_GT_FILE_TYPE_PCAP     @"pcap"
+#define M_GT_FILE_TYPE_JS       @"js"
 
 @interface NSString (TimeCategory)
 
