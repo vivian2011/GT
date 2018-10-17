@@ -461,7 +461,9 @@
 - (NSString *)getValue:(NSDictionary *)dic atRow:(NSInteger)row atCol:(NSInteger)col {
     NSArray *array = [dic objectForKey:@"history"];
     GTHistroyValue *value = [array objectAtIndex:row];
-    NSArray *line = [[value rowStr] componentsSeparatedByString:@","];
+    NSString *lineStr = [value rowStr];
+    NSLog(@"saveFile--js--value:%@",lineStr);
+    NSArray *line = [lineStr componentsSeparatedByString:@","];
     return [line[col] stringByReplacingOccurrencesOfString:@"\r\n"withString:@""];
 }
 
@@ -473,7 +475,9 @@
 - (NSString*)dictionaryToJson:(NSDictionary *)dic{
     NSError *parseError = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
-    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSLog(@"saveFile--js--jsonData:%@",jsonStr);
+    return jsonStr;
 }
 
 //保存JS文件格式
@@ -493,6 +497,7 @@
         NSDictionary *frameDic = [dicAll objectForKey:@"App Smoothness"];
         NSDictionary *memDic = [dicAll objectForKey:@"App Memory"];
         NSDictionary *flowDic = [dicAll objectForKey:@"Device Network"];
+        NSLog(@"saveFile--js--初始化数据");
         
         // 组装appInfo
         NSMutableDictionary *appInfo = [NSMutableDictionary dictionaryWithCapacity:M_GT_MB];
@@ -511,6 +516,7 @@
         float flowUploadSum = 0;
         
         for (int i = 0; i < [array count]; i++) {
+            NSLog(@"saveFile--js--i:%d",i);
             NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:10];
             NSString *cpuValue =[self getValue:cpuDic atRow:i atCol:4];
             NSString *memValue = [self getValue:memDic atRow:i atCol:4];
@@ -532,13 +538,16 @@
         }
         // 设置开始时间
         [appInfo setObject:[normalInfos[0] objectForKey:@"time"] forKey:@"startTestTime"];
-        
-        // 组装frame
+        NSLog(@"saveFile--js--组装appInfo完成");
+        // 组装frames
         NSMutableArray *frames = [NSMutableArray arrayWithCapacity:10];
         NSArray *frameArray = [frameDic objectForKey:@"history"];
         for (int i = 0; i < [frameArray count]; i++) {
-            [frames addObject:[self getValue:cpuDic atRow:i atCol:4]];
+            NSLog(@"saveFile--js--frameArray.i:%d",i);
+            [frames addObject:[self getValue:frameDic atRow:i atCol:4]];
         }
+        
+        NSLog(@"saveFile--js--组装frames完成");
         
         // 组装deviceInfo
         NSMutableDictionary *deviceInfo = [NSMutableDictionary dictionaryWithCapacity:10];
@@ -546,6 +555,7 @@
         [deviceInfo setObject:@"3.0" forKey:@"gtrVersionCode"];
         [deviceInfo setObject:[AppInfo getSystemName] forKey:@"sdkName"];
         [deviceInfo setObject:[AppInfo getDeviceName] forKey:@"vendor"];
+        NSLog(@"saveFile--js--组装deviceInfo完成");
         
         // 组装frontBackStates，先不区分前后台
         NSMutableArray *frontBackStates = [NSMutableArray arrayWithCapacity:10];
@@ -553,6 +563,7 @@
         NSDictionary *endDic = [NSDictionary dictionaryWithObjectsAndKeys:@"0",@"isFront",[normalInfos[[normalInfos count]-1] objectForKey:@"time"],@"time", nil];
         [frontBackStates addObject:beginDic];
         [frontBackStates addObject:endDic];
+        NSLog(@"saveFile--js--组装frontBackStates完成");
         
         // 组装frontBackInfo
         NSMutableDictionary *frontBackInfo = [NSMutableDictionary dictionaryWithCapacity:10];
@@ -560,6 +571,7 @@
         [frontBackInfo setObject:[NSNumber numberWithFloat:flowDownSum] forKey:@"frontFlowDownload"];
         [frontBackInfo setObject:[NSNumber numberWithFloat:flowUploadSum] forKey:@"frontFlowUpload"];
         [frontBackInfo setObject:memData forKey:@"frontMemoryArray"];
+        NSLog(@"saveFile--js--组装frontBackInfo完成");
         
         // 组装其他
         NSString *other = @"var gtrThreadInfos=[];\r\nvar allBlockInfos=[];\r\nvar bigBlockIDs=[];\r\nvar pageLoadInfos=[];\r\nvar overActivityInfosvar=[];\r\nvar overViewDraws=[];\r\nvar operationInfos=[];\r\nvar viewBuildInfos=[];\r\nvar overViewBuilds=[];\r\nvar fragmentInfos=[];\r\nvar overFragments=[];\r\nvar allGCInfos=[];\r\nvar explicitGCs=[];\r\nvar diskIOInfos=[];\r\nvar fileActionInfos=[];\r\nvar fileActionInfosInMainThread=[];\r\nvar dbActionInfos=[];\r\nvar dbActionInfosInMainThread=[];\r\nvar logInfos=[];\r\nvar flagInfo=[];\r\nvar tableBaseData_base=frontBackInfo;\r\nvar tableBaseData_lowSM=lowSMInfos;\r\nvar tableBaseData_bigBlock=bigBlockIDs;\r\nvar tableBaseData_overActivity=overActivityInfos;\r\nvar tableBaseData_allPage=pageLoadInfos;\r\nvar tableBaseData_overFragment=overFragments;\r\nvar tableBaseData_allFragment=fragmentInfos;\r\nvar tableBaseData_overViewBuild=overViewBuilds;\r\nvar tableBaseData_overViewDraw=overViewDraws;\r\nvar tableBaseData_explicitGC=explicitGCs;\r\nvar tableBaseData_fileActionInMainThread=fileActionInfosInMainThread;\r\nvar tableBaseData_dbActionInMainThread=dbActionInfosInMainThread;\r\nvar tableBaseData_db=dbActionInfos;\r\nvar tableBaseData_logcat=logInfos;";
@@ -574,6 +586,8 @@
         [body appendFormat:@"var frontBackStates=%@\r\n", [frontBackStates componentsJoinedByString:@","]];
         [body appendFormat:@"var frontBackInfo=%@\r\n", [self dictionaryToJson:frontBackInfo]];
         [body appendFormat:@"%@\r\n", other];
+        
+        NSLog(@"saveFile--js--组装全部数据完成%@",body);
         
         
         // 写入历史数据

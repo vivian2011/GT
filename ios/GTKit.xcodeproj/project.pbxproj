@@ -300,6 +300,8 @@
 		FAE4566E2175884C00C14E62 /* AppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE4566D2175884C00C14E62 /* AppInfo.h */; };
 		FAE456712175E93C00C14E62 /* LagMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE456702175E93C00C14E62 /* LagMonitor.h */; };
 		FAE456732175E95500C14E62 /* LagMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE456722175E95500C14E62 /* LagMonitor.m */; };
+		FAE4569A21771B5400C14E62 /* BacktraceLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE4569921771B5400C14E62 /* BacktraceLogger.h */; };
+		FAE4569C21771B8700C14E62 /* BacktraceLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE4569B21771B8700C14E62 /* BacktraceLogger.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -619,6 +621,8 @@
 		FAE4566D2175884C00C14E62 /* AppInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppInfo.h; sourceTree = "<group>"; };
 		FAE456702175E93C00C14E62 /* LagMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LagMonitor.h; sourceTree = "<group>"; };
 		FAE456722175E95500C14E62 /* LagMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LagMonitor.m; sourceTree = "<group>"; };
+		FAE4569921771B5400C14E62 /* BacktraceLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BacktraceLogger.h; sourceTree = "<group>"; };
+		FAE4569B21771B8700C14E62 /* BacktraceLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BacktraceLogger.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1503,10 +1507,20 @@
 		FAE4566F2175E87100C14E62 /* Lag */ = {
 			isa = PBXGroup;
 			children = (
+				FAE4569821771B1200C14E62 /* Backtrace */,
 				FAE456702175E93C00C14E62 /* LagMonitor.h */,
 				FAE456722175E95500C14E62 /* LagMonitor.m */,
 			);
 			path = Lag;
+			sourceTree = "<group>";
+		};
+		FAE4569821771B1200C14E62 /* Backtrace */ = {
+			isa = PBXGroup;
+			children = (
+				FAE4569921771B5400C14E62 /* BacktraceLogger.h */,
+				FAE4569B21771B8700C14E62 /* BacktraceLogger.m */,
+			);
+			path = Backtrace;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1587,6 +1601,7 @@
 				91A9F300183870B5004B911E /* GTSettingCell.h in Headers */,
 				91A9F2B4183870B5004B911E /* GTSMMonitor.h in Headers */,
 				91A9F290183870B4004B911E /* GTUITextField.h in Headers */,
+				FAE4569A21771B5400C14E62 /* BacktraceLogger.h in Headers */,
 				91A9F2F6183870B5004B911E /* GTProfiler.h in Headers */,
 				9111179A18556B2A007D0AC0 /* GTOutputDataInfo.h in Headers */,
 				91A9F2FC183870B5004B911E /* GTACSettingBoard.h in Headers */,
@@ -1913,6 +1928,7 @@
 				91A9F275183870B4004B911E /* GTCommonCell.m in Sources */,
 				91A9F3E818387D6B004B911E /* GTUIViewController.m in Sources */,
 				91A9F2DE183870B5004B911E /* GTParaInSelectBoard.m in Sources */,
+				FAE4569C21771B8700C14E62 /* BacktraceLogger.m in Sources */,
 				91A9F2E0183870B5004B911E /* GTParaOutDetailBoard.m in Sources */,
 				91A9F2D1183870B5004B911E /* GTDetailedWindow.m in Sources */,
 				91A9F2CF183870B5004B911E /* GTACWindow.m in Sources */,

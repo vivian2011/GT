@@ -167,7 +167,7 @@ extern void func_setOutputWriteToLog(const char *key, bool writeToLog);
  *
  * Example Usage:
  * @code
- *    //设置是否选择改项记录输出参数历史信息
+ *    //设置是否选择该项记录输出参数历史信息
  *    GT_OUT_HISTORY_CHECKED_SET("fileTransferResult", true);
  * @endcode
  */

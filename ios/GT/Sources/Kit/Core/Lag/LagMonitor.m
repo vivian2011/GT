@@ -1,4 +1,5 @@
 #import "LagMonitor.h"
+#import "BacktraceLogger.h"
 
 @interface LagMonitor ()
 {
@@ -44,6 +45,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 
 - (void)startMonitor
 {
+
     if (observer)
         return;
     
@@ -52,12 +54,12 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
     
     // 注册RunLoop状态观察
     CFRunLoopObserverContext context = {0,(__bridge void*)self,NULL,NULL};
-    observer = CFRunLoopObserverCreate(kCFAllocatorDefault,
-                                       kCFRunLoopAllActivities,
-                                       YES,
-                                       0,
-                                       &runLoopObserverCallBack,
-                                       &context);
+    observer = CFRunLoopObserverCreate(kCFAllocatorDefault,     //选择默认分配器
+                                       kCFRunLoopAllActivities,  //配置观察者监听Run Loop的所有状态
+                                       YES, //yes:runloop每次运行都监听，no：只监听一次
+                                       0,       //设置优先级，0为最高优先级
+                                       &runLoopObserverCallBack, //回调函数
+                                       &context); //观察者上下文
     //将观察者添加到主线程runloop的common模式下的观察中
     CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);
     
@@ -65,7 +67,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         while (YES)
         {
-            //假定连续5次超时50ms认为卡顿(当然也包含了单次超时250ms)
+            //假定连续5次超时50ms认为卡顿(当然也包含了单次超时250ms，等待超时返回为非0，信号量达到则返回为0
             long st = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 50*NSEC_PER_MSEC));
             if (st != 0)
             {
@@ -79,10 +81,15 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
                 //两个runloop的状态，BeforeSources和AfterWaiting这两个状态区间时间能够检测到是否卡顿
                 if (activity==kCFRunLoopBeforeSources || activity==kCFRunLoopAfterWaiting)
                 {
-                    if (++timeoutCount < 5)
+                    if (++timeoutCount < 5){
                         continue;
-                    //检测到卡顿上报并记录
-                    NSLog(@"此处发生卡顿:---%d",timeoutCount);
+                    }else{
+                        //检测到卡顿上报并记录
+                        NSLog(@"此处发生卡顿，卡顿堆栈打印开始：------");
+                        [BacktraceLogger lxd_logMain];
+                        NSLog(@"此处发生卡顿，卡顿堆栈打印结束：------");
+                    }
+                    
                 }//end activity
             }// end semaphore wait
             timeoutCount = 0;

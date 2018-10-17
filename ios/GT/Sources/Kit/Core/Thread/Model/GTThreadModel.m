@@ -53,9 +53,13 @@ M_GT_DEF_SINGLETION(GTThreadModel);
 {
     self = [super init];
     if (self) {
+        // 设置输出cpu
         GT_OUT_REGISTER("App CPU", "CPU");
         GT_OUT_HISTORY_CHECKED_SET("App CPU", true);
         GT_OC_OUT_DELEGATE_SET(@"App CPU", self);
+        // 设置输出线程
+        GT_OUT_REGISTER("App Thread", "CPU");
+        GT_OUT_HISTORY_CHECKED_SET("App Thread", true);
     }
     
     return self;
