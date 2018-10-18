@@ -39,6 +39,7 @@
 @interface GTThreadModel : NSObject <GTParaDelegate>
 {
     float cpu_usage;
+    NSMutableArray *threadCpus;
 }
 
 M_GT_AS_SINGLETION(GTThreadModel);

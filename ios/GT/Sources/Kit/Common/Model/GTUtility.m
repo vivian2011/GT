@@ -129,6 +129,19 @@ M_GT_DEF_SINGLETION(GTUtility);
     return [n_image autorelease];
 }
 
+/**
+ *  字典转JSON字符串
+ *  @param dic 字典
+ *  @return JSON字符串
+ */
++ (NSString*)dic2String:(NSDictionary *)dic{
+    NSError *parseError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
+    NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSLog(@"saveFile--js--jsonData:%@",jsonStr);
+    return jsonStr;
+}
+
 
 @end
 #endif

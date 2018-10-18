@@ -46,6 +46,7 @@ M_GT_AS_SINGLETION(GTUtility);
 
 + (UIImage *)scaleImage:(UIImage *)image toScale:(float)scaleSize;
 + (UIImage*)image:(UIImage*)image scaleAspectFitSize:(CGSize)size;
++ (NSString *)dic2String:(NSDictionary *)dic;
 
 @end
 

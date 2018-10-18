@@ -34,6 +34,7 @@
 #import "GTLogConfig.h"
 #import "GTConfig.h"
 #import "AppInfo.h"
+#import "GTUtility.h"
 
 @implementation NSString (FileSort)
 //按文件名的数字排序，最小到最大
@@ -467,18 +468,6 @@
     return [line[col] stringByReplacingOccurrencesOfString:@"\r\n"withString:@""];
 }
 
-/**
- *  字典转JSON字符串
- *  @param dic 字典
- *  @return JSON字符串
- */
-- (NSString*)dictionaryToJson:(NSDictionary *)dic{
-    NSError *parseError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
-    NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    NSLog(@"saveFile--js--jsonData:%@",jsonStr);
-    return jsonStr;
-}
 
 //保存JS文件格式
 - (void)exportJS:(NSString *)filePath param:(NSDictionary *)dicAll {
@@ -579,12 +568,12 @@
 
         // 组装全部数据
         NSMutableString *body = [[NSMutableString alloc] initWithCapacity:M_GT_MB];
-        [body appendFormat:@"var appInfo=%@\r\n", [self dictionaryToJson:appInfo]];
+        [body appendFormat:@"var appInfo=%@\r\n", [GTUtility dic2String:appInfo]];
         [body appendFormat:@"var frames=%@\r\n", [frames componentsJoinedByString:@","]];
         [body appendFormat:@"var normalInfos=%@\r\n", [normalInfos componentsJoinedByString:@","]];
-        [body appendFormat:@"var deviceInfo=%@\r\n", [self dictionaryToJson:deviceInfo]];
+        [body appendFormat:@"var deviceInfo=%@\r\n", [GTUtility dic2String:deviceInfo]];
         [body appendFormat:@"var frontBackStates=%@\r\n", [frontBackStates componentsJoinedByString:@","]];
-        [body appendFormat:@"var frontBackInfo=%@\r\n", [self dictionaryToJson:frontBackInfo]];
+        [body appendFormat:@"var frontBackInfo=%@\r\n", [GTUtility dic2String:frontBackInfo]];
         [body appendFormat:@"%@\r\n", other];
         
         NSLog(@"saveFile--js--组装全部数据完成%@",body);
